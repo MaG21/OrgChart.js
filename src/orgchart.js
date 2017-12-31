@@ -1608,6 +1608,20 @@ export default class OrgChart {
     }
     return subObj;
   }
+  _loopChartDataset(chart) {
+    let _subObj = JSON.parse(chart.querySelector('.node').dataset.source);
+
+    if (chart.children[3]) {
+      Array.from(chart.children[3].children).forEach((el) => {
+        if (!_subObj.children) { _subObj.children = []; }
+        _subObj.children.push(this._loopChartDataset(el.firstChild));
+      });
+    }
+    return _subObj;
+  }
+  getChartJSON() {
+    return this._loopChartDataset(this.chart.querySelector('table'));
+  }
   getHierarchy() {
     if (!this.chart.querySelector('.node').id) {
       return 'Error: Nodes of orghcart to be exported must have id attribute!';
